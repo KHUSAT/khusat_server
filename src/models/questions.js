@@ -23,13 +23,29 @@ const questionSchema = new schema({
     type: String,
     default: "아니다"
   },
-  score1: {
+  fit: {
     type: Number,
-    default: 50,
+    default: 0,
   },
-  score2: {
+  dtl: {
     type: Number,
-    default: -50,
+    default: 0,
+  },
+  trf: {
+    type: Number,
+    default: 0,
+  },
+  ctr: {
+    type: Number,
+    default: 0,
+  },
+  sup: {
+    type: Number,
+    default: 0,
+  },
+  act: {
+    type: Number,
+    default: 0,
   },
 });
 

@@ -71,6 +71,9 @@ module.exports = function(app)
 
   app.post('/addJobs', async(req, res, next) => {
     // 보직 추가하는 api
+    const datas = req.body;
+    
+
   });
 
   app.post('/addQuestions', async(req, res, next) => {
