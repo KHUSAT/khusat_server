@@ -160,25 +160,36 @@ module.exports = function(app)
       }
     }
     
-    console.log(fight, detail, traffic, control, support, activity);
+    // console.log(fight, detail, traffic, control, support, activity);
     const recommandedJob = await jobRecommend(fight, detail, traffic, control, support, activity);
 
     // TODO : recommand job
-    // const jobList = await Job.find({high: recommandedJob}).exec();
+    const jobList = await Job.find({high: recommandedJob}).exec();
 
-    // const rand = Math.floor(Math.random() * jobList.length);
-    // const result = jobList[rand];
+    const rand = Math.floor(Math.random() * jobList.length);
+    const result = jobList[rand];
   
-    res.send(recommandedJob);
-    // res.send(result);
+    // res.send(recommandedJob);
+    res.send(result);
     
   });
 
   app.post('/addJobs', async(req, res, next) => {
     // 보직 추가하는 api
-    
+    const datas = req.body;
 
+    for(let i=0; i<datas.length; i++){
+      const data = new Job();
+      data.num = datas[i].num;
+      data.high = datas[i].high;
+      data.low = datas[i].low;
+      data.description = datas[i].description;
+      data.image = datas[i].image;
 
+      await data.save();
+    }
+
+    res.send(datas[0]);
   });
   app.post('/addQuestions', async(req, res, next) => {
     // 질문 추가하는 api
