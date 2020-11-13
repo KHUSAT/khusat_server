@@ -27,7 +27,6 @@ const jobSchema = new schema({
     type: String,
     default: "???/???"
   }
-  
 });
 
 module.exports = mongoose.model('job', jobSchema);
