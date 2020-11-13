@@ -68,5 +68,15 @@ module.exports = function(app)
   
     res.send(recommendedJob);
   });
+
+  app.post('/addJobs', async(req, res, next) => {
+    // 보직 추가하는 api
+  });
+
+  app.post('/addQuestions', async(req, res, next) => {
+    // 질문 추가하는 api
+  });
+
+
   
 }
