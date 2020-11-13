@@ -15,10 +15,6 @@ const jobSchema = new schema({
     type: String,
     default: "대분류를 입력하세요",
   },
-  middle:{
-    type: String,
-    default: "중분류를 입력하세요",
-  },
   low:{
     type: String,
     default: "소분류를 입력하세요",
@@ -31,7 +27,6 @@ const jobSchema = new schema({
     type: String,
     default: "???/???"
   }
-  
 });
 
 module.exports = mongoose.model('job', jobSchema);

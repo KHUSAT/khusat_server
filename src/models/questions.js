@@ -7,7 +7,7 @@ const questionSchema = new schema({
    * 번호 질문내용  답1 답2 가중치1, 가중치2
    */
 
-  questionNum:{
+  num:{
     type: Number,
     default: -1
   },
@@ -23,27 +23,27 @@ const questionSchema = new schema({
     type: String,
     default: "아니다"
   },
-  fit: {
+  fight: {
     type: Number,
     default: 0,
   },
-  dtl: {
+  detail: {
     type: Number,
     default: 0,
   },
-  trf: {
+  traffic: {
     type: Number,
     default: 0,
   },
-  ctr: {
+  control: {
     type: Number,
     default: 0,
   },
-  sup: {
+  support: {
     type: Number,
     default: 0,
   },
-  act: {
+  activity: {
     type: Number,
     default: 0,
   },

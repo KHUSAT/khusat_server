@@ -71,15 +71,34 @@ module.exports = function(app)
 
   app.post('/addJobs', async(req, res, next) => {
     // 보직 추가하는 api
-    const datas = req.body;
     
+
 
   });
 
   app.post('/addQuestions', async(req, res, next) => {
     // 질문 추가하는 api
+    const datas = req.body;
+    console.log(datas);
+    console.log(typeof(datas));
+
+    for(let i=0; i<datas.length; i++){
+      const data = new Question();
+
+      data.num = datas[i].num;
+      data.question = datas[i].question;
+      data.answer1 = datas[i].answer1;
+      data.answer2 = datas[i].answer2;
+      data.fight = datas[i].fight;
+      data.detail = datas[i].detail;
+      data.traffic = datas[i].traffic;
+      data.control = datas[i].control;
+      data.support = datas[i].support;
+      data.activity = datas[i].activity;
+      
+      console.log(data);
+
+      await data.save();
+    }
   });
-
-
-  
 }
