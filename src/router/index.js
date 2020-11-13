@@ -1,13 +1,96 @@
 const Question = require('../models/questions');
 const Job = require('../models/jobs');
+const bodyParser = require('body-parser');
 
+bodyParser.json();
+
+async function jobRecommend(fight, detail, traffic, control, support, activity){
+  const jobs = await Job.find().exec();
+
+  let scores = [fight, detail, traffic, control, support];
+  const bar = 50;
+  
+  // 내림차순 정렬
+  scores.sort(function(a, b) {
+    return b-a;
+  });
+
+  if(activity >= bar){
+    // 동적
+    if(scores[0] === fight){
+      // 전투성향 높음 : 보병, 기갑
+      if(detail >= bar){
+        return "포병";
+      }
+      else if(traffic >= bar){
+        // 기갑
+        return "기갑";
+      }
+      return "보병";
+    }
+    else if(scores[0] === detail){
+      return "포병";
+    }
+    else if(scores[0] === traffic){
+      if(fight >= bar){
+        return "기갑";
+      }
+      else{
+        return "수송";
+      }
+    }
+    else if(scores[0] === control){
+      return "헌병";
+    }
+    else{
+      return "의무";
+    }
+  }
+  else{
+    //정적
+    if(scores[0] === fight){
+      // 전투성향 높음
+      if(detail >= bar){
+        return "방공";
+      }
+      return "화생방";
+    }
+    else if(scores[0] === detail){
+      if(fight >= bar){
+        return "방공";
+      }
+      return "공병";
+    }
+    else if(scores[0] === traffic){
+      return "보급";
+    }
+    else if(scores[0] === control){
+      if(support >= bar){
+        return "정보통신";
+      }
+      return "인사";
+    }
+    else{
+      if(control>=bar){
+        return "정보통신";
+      }
+      else if(fight >= bar){
+        return "화생방";
+      }
+      else if(traffic >= bar){
+        return "보급";
+      }
+      else{
+        return "정보";
+      }
+    }
+  }
+
+  return "보병";
+}
 
 module.exports = function(app)
 {
-    
-  // let questions = [];
-  // let jobList = [];
-
   app.get('/', (req, res, next) => {
     res.send('hello world!');
   });
@@ -42,31 +125,53 @@ module.exports = function(app)
   });
   
   app.post('/submit', async (req, res, next) => {
-    const {answer} = req.body;
-    console.log(answer);
-    
-    const answerArray = await Job.find().exec();
+    const answers = req.body;
+    // console.log(answers);
   
-    let score = 50;
+    let fight = 50;
+    let detail = 50;
+    let traffic = 50;
+    let control = 50;
+    let support = 50;
+    let activity = 50;
   
     /**
      * 정답 폼
      * 문항 번호  정답 고른것
      */
-  
-    for(let i=0; i< answerArray.length; i++){
-      if(answerArray[i][1] === 0){
-        // 1번답 골랐을때
-        score += questions[answerArray[i]][3];
+    
+    for(let i=0; i<answers.length; i++){
+      const question = await Question.findOne({num: answers[i].num}).exec();
+      if(question.choice === 0){
+        fight += question.fight;
+        detail += question.detail;
+        traffic += question.traffic;
+        control += question.control;
+        support += question.support;
+        activity += question.activity;
       }
       else{
-        score += questions[answerArray[i]][4];
+        fight -= question.fight;
+        detail -= question.detail;
+        traffic -= question.traffic;
+        control -= question.control;
+        support -= question.support;
+        activity -= question.activity;
       }
     }
+    
+    console.log(fight, detail, traffic, control, support, activity);
+    const recommandedJob = await jobRecommend(fight, detail, traffic, control, support, activity);
+
+    // TODO : recommand job
+    // const jobList = await Job.find({high: recommandedJob}).exec();
+
+    // const rand = Math.floor(Math.random() * jobList.length);
+    // const result = jobList[rand];
   
-    const recommendedJob = jobList[score%jobList.length];
-  
-    res.send(recommendedJob);
+    res.send(recommandedJob);
+    // res.send(result);
+    
   });
 
   app.post('/addJobs', async(req, res, next) => {
@@ -75,11 +180,10 @@ module.exports = function(app)
 
 
   });
-
   app.post('/addQuestions', async(req, res, next) => {
     // 질문 추가하는 api
     const datas = req.body;
-    console.log(datas);
+    // console.log(datas);
     console.log(typeof(datas));
 
     for(let i=0; i<datas.length; i++){
@@ -96,9 +200,12 @@ module.exports = function(app)
       data.support = datas[i].support;
       data.activity = datas[i].activity;
       
-      console.log(data);
+      // console.log(data);
 
       await data.save();
     }
+
+    res.send(req.body);
   });
+  
 }
